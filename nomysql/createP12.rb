@@ -7,15 +7,14 @@ require Pathname.new(File.dirname(__FILE__)).realpath.to_s + '/globalConfig'
 
 #参考 https://github.com/fastlane/fastlane/blob/master/spaceship/docs/DeveloperPortal.md
 # 设置 ser证书 和 上传p12文件
-# 运行方式 ruby saveCert.rb  apuid username password certificateId p12
+# 运行方式 ruby createP12.rb username password keyPath
 
 
 username = ARGV[0].to_s;
 password = ARGV[1].to_s;
 
-certificateId = ARGV[2].to_s;
 # 绝对路径
-p12Path = ARGV[3].to_s;
+keyPath = ARGV[2].to_s;
 
 begin
     Spaceship::Portal.login(username, password)
@@ -24,8 +23,7 @@ begin
 	csr, pkey = Spaceship::Portal.certificate.create_certificate_signing_request
 	certificateObj = Spaceship::Portal.certificate.production.create!(csr: csr)
 	certificateId = certificateObj.id
-	cTime = certificateObj.created
-	eTime = certificateObj.expires
+
 
 #   写入证书
 	x509_certificate = certificateObj.download
